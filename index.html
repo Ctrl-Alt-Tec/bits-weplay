@@ -27,6 +27,28 @@
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
+
+
+
+
+
+
+
+  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRLNCGJFThhQM9w5AOkzeCh6XVus3nPsQtWTYkudDbY6vWplytVVzFq_WbWmDvevfJSWVtV-QeYhB7q/pub?output=csv')
+  .then(function(data){
+    return data.text()
+  })
+  .then(function(data){ 
+    console.log(data) 
+
+    document.querySelector('.board').innerHTML=data
+
+  })
+
+
+
+
 </script>
 </head>
 

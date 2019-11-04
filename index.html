@@ -1,82 +1,215 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Ctrl Alt Tec - Bits</title>
-    <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Ctrl Alt Tec - Bits</title>
+      <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
+      <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
+      <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+      <link rel="icon" href="favicon.ico" type="image/x-icon">
+      <style>
+        .leaderboard{
+          background: #065894;
+          padding: 24px;
+          color: white;
+          display: flex;
+          flex-direction: row;
+          overflow: auto;
+          align-items: center;
+          height: 100%;
+        }
+        .leaderboard h1{
+          width: 50cw
+        }
+        .leader{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          font-size: 1.5em;
+          min-width: 200px;
+          cursor: pointer;
+        }
+        .leader:hover{
+          transform: scale(1.05);
+        }
 
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#config-web-app -->
+        .bits_cont{
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          margin: 8px;
+          background-color: #FBDA61;
+          background-image: linear-gradient(45deg, #FBDA61 0%, #FF5ACD 100%);
+          color: white;
+          font-weight: 600;
+          font-size: 3em;
+          text-align: center;
+          line-height: 1.5em;
+          box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+        }
 
-<script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyDl5M0S6l0R5EIKRAyyGzWdl3Cr2_bXEqE",
-    authDomain: "ctrlalttecbits.firebaseapp.com",
-    databaseURL: "https://ctrlalttecbits.firebaseio.com",
-    projectId: "ctrlalttecbits",
-    storageBucket: "",
-    messagingSenderId: "35406441119",
-    appId: "1:35406441119:web:c95e9865ed5c9bf5d150aa"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+        .ticket{
+          width: 400px;
+          height: 210px;
+          background: #ccb779;
+          background-image: radial-gradient(30px circle, white 99%, transparent);
+          background-position: 200px 105px;
+          padding: 32px
+        }
+
+        .ticket_border{
+          width: 100%;
+          height: 100%;
+          border: 1px solid black;
+          border-radius: 32px;
+          display: flex;
+        }
+
+        .ticket_left,.ticket_right{
+          display: flex;
+          text-orientation: sideways;
+          writing-mode:vertical-rl;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
+        }
+
+        .ticket_left{
+          flex: 1;
+          border-right: 1px solid black;
+          
+        }
+        .ticket_center{
+          flex: 4;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          font-size: 3em;
+          font-weight: 600;
+        }
+        .ticket_right{
+          flex: 1;
+          border-left: 1px solid black;
+        }
+
+        h1{
+          margin: 0;
+          font-size: 3em;
+          font-weight: 800;
+          
+        }
 
 
 
+      </style>
+  </head>
 
+  <body>
 
-
-
-
-  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRLNCGJFThhQM9w5AOkzeCh6XVus3nPsQtWTYkudDbY6vWplytVVzFq_WbWmDvevfJSWVtV-QeYhB7q/pub?output=csv')
-  .then(function(data){
-    return data.text()
-  })
-  .then(function(data){ 
-    console.log(data) 
-
-    document.querySelector('.board').innerHTML=data
-
-  })
-
-
-
-
-</script>
-</head>
-
-<body>
-
-    <div class="header">
-        <img src="LOGO-INLINE.png" height="50">
-        <img src="bitsheader.png" height="90" class="mylogo">
-
+    <div class="leaderboard">
     </div>
 
-    <div class="title">
-        <br>
-        <img src="logo-block.png"  class="logo">
-        <br>
-        <h1 class="txt">MARCADOR</h1>
-    </div>
 
-    <div class="board">
-        
-    </div>
+    <script>
+      let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
+      UIAppBar.setTitle("BITS")
+      document.body.prepend(UIAppBar.dom)
 
-    <div class="footer">
-        
-    </div>
+      let UIModal = new UI.Modal()
+      document.body.prepend(UIModal.dom)
 
 
+      class Leader{
+        constructor(name, bits, details){
+          this.dom = document.createElement('div');
+          this.dom.classList.add('leader');
+          let bitsCont = document.createElement('div');
+          bitsCont.classList.add('bits_cont')
+          bitsCont.innerText = bits;
+          bitsCont.style.width = bits/Leader.maxBits*70+'vh'
+          bitsCont.style.height = bits/Leader.maxBits*70+'vh'
+          bitsCont.style.lineHeight = bits/Leader.maxBits*70+'vh'
+          this.dom.append(bitsCont)
+          this.dom.append(name)
 
-</body>
 
+          this.dom.addEventListener('click', ()=>{
+            UIModal.show(function(){
+              let container = document.createElement('div')
+              container.style.padding = "8px";
+              container.style.display = "flex";
+              container.style.flexDirection = "column";
+              container.style.alignItems = "center"; 
+              let title = document.createElement('h1')
+              title.innerText = name;
+              container.append(title)
+              container.append(new Ticket(name, bits).dom)
+
+              container.append(JSON.stringify(details))
+
+              return container;
+            }(), "Detalles")
+          })
+
+        }
+      }
+
+      class Ticket{
+        constructor(name, bits){
+          this.dom = document.createElement('div');
+          this.dom.classList.add('ticket')
+          let ticket_border = document.createElement('div');
+          ticket_border.classList.add('ticket_border')
+          
+          
+          let ticket_left = document.createElement('div')
+          ticket_left.classList.add('ticket_left')
+          ticket_left.innerText = 'Ctrl Alt Tec'
+
+          let ticket_center = document.createElement('div')
+          ticket_center.classList.add('ticket_center')
+          ticket_center.innerText = bits + ' BITS'
+          
+          let ticket_right = document.createElement('div')
+          ticket_right.classList.add('ticket_right')
+          ticket_right.innerText = name
+
+
+          ticket_border.append(ticket_left)
+          ticket_border.append(ticket_center)
+          ticket_border.append(ticket_right)
+          
+          
+          this.dom.append(ticket_border)
+
+        }
+      }
+
+
+      async function getBits(){
+        return new Promise((resolve, reject)=>{
+          fetch('https://ctrl-alt-tec-members.herokuapp.com/bits').then(d=>d.json()).then(data=>{
+            data.sort((a, b) => b.bits - a.bits)
+            
+            resolve(data.filter(i=>i.bits != 0))
+          })
+        })
+      }
+
+      getBits().then(bits=>{
+        Leader.maxBits = bits[0].bits
+        for(let leader of bits){
+          document.querySelector('.leaderboard').append(new Leader(leader.name, leader.bits, leader.details).dom)
+        }
+
+
+      })
+
+    </script>
+  </body>
 </html>

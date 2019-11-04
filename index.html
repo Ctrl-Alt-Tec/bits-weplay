@@ -104,7 +104,9 @@
           
         }
 
-
+        .altUI_ListViewItem {
+          width: 100%;
+        }
 
       </style>
   </head>
@@ -150,7 +152,12 @@
               container.append(title)
               container.append(new Ticket(name, bits).dom)
 
-              container.append(JSON.stringify(details))
+              //container.append(JSON.stringify(details))
+              for (const key in details) {
+                if(details[key] > 0){
+                  container.append( new UI.ListViewItemKeyValue(key, details[key]).dom )
+                }
+              }
 
               return container;
             }(), "Detalles")
@@ -166,7 +173,6 @@
           let ticket_border = document.createElement('div');
           ticket_border.classList.add('ticket_border')
           
-          
           let ticket_left = document.createElement('div')
           ticket_left.classList.add('ticket_left')
           ticket_left.innerText = 'Ctrl Alt Tec'
@@ -179,11 +185,9 @@
           ticket_right.classList.add('ticket_right')
           ticket_right.innerText = name
 
-
           ticket_border.append(ticket_left)
           ticket_border.append(ticket_center)
           ticket_border.append(ticket_right)
-          
           
           this.dom.append(ticket_border)
 

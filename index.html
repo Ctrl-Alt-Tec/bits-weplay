@@ -137,9 +137,7 @@
         return result.slice(header)
       }
 
-      fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv").then(data=>data.text()).then(data=>{
-        console.log(csvJSON(data, 3))
-      })
+ 
 
 
 
@@ -223,10 +221,16 @@
 
       async function getBits(){
         return new Promise((resolve, reject)=>{
-          fetch('https://ctrl-alt-tec-members.herokuapp.com/bits').then(d=>d.json()).then(data=>{
-            data.sort((a, b) => b.bits - a.bits)
-            
-            resolve(data.filter(i=>i.bits != 0))
+          fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv').then(d=>d.text()).then(data=>{
+            let bits = csvJSON(data, 3)
+            bits.map(l=>({
+              name: l.Miembro,
+              bits: l.Total,
+              details: (({Miembro, Total, ...o})=>o)(l)
+            }))
+            console.log(bits)
+            bits.sort((a, b) => b.bits - a.bits)
+            resolve(bits.filter(i=>i.bits != 0))
           })
         })
       }

@@ -21,7 +21,9 @@ var bits_db = new GoogleSpreadsheet("1kALw2sXhQEohAyW_zL6TMpDLpbHbKvw58evZasUxpI
 
 bits_db.useServiceAccountAuth(creds, function(err){
     bits_db.getRows(1, function(err, rows){
-        console.log("hello", rows)
+      for(row of rows){
+        console.log("hello", row); 
+      }
     })
 })
 

@@ -152,7 +152,7 @@
       }
 
       fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv").then(data=>data.text()).then(data=>{
-        console.log(csvJSON(csv))
+        console.log(csvJSON(data))
       })
 
 

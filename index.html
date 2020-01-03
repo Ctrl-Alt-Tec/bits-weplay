@@ -222,8 +222,7 @@
       async function getBits(){
         return new Promise((resolve, reject)=>{
           fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv').then(d=>d.text()).then(data=>{
-            let bits = csvJSON(data, 3)
-            bits.map(l=>({
+            let bits = csvJSON(data, 3).map(l=>({
               name: l.Miembro,
               bits: l.Total,
               details: (({Miembro, Total, ...o})=>o)(l)

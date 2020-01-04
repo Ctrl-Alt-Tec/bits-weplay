@@ -117,6 +117,9 @@
 
     <div class="leaderboard">
     </div>
+    <span>
+      Made with ❤️ by <a href="http://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a>
+    </span>
 
 
     <script>
@@ -143,7 +146,7 @@
 
 
       let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
-      UIAppBar.setTitle("BITS")
+      UIAppBar.setTitle("Tickets")
       document.body.prepend(UIAppBar.dom)
 
       let UIModal = new UI.Modal()
@@ -163,7 +166,6 @@
           this.dom.append(bitsCont)
           this.dom.append(name)
 
-
           this.dom.addEventListener('click', ()=>{
             UIModal.show(function(){
               let container = document.createElement('div')
@@ -174,7 +176,12 @@
               let title = document.createElement('h1')
               title.innerText = name;
               container.append(title)
-              container.append(new Ticket(name, bits).dom)
+              container.append(new Ticket({
+                bits: bits,
+                name: name, 
+                issuer: 'Quanta',
+                unit: 'Tickets'
+              }).dom)
 
               //container.append(JSON.stringify(details))
               for (const key in details) {
@@ -191,30 +198,29 @@
       }
 
       class Ticket{
-        constructor(name, bits){
+        constructor(options){
           this.dom = document.createElement('div');
           this.dom.classList.add('ticket')
           let ticket_border = document.createElement('div');
           ticket_border.classList.add('ticket_border')
-          
+
           let ticket_left = document.createElement('div')
           ticket_left.classList.add('ticket_left')
-          ticket_left.innerText = 'Ctrl Alt Tec'
+          ticket_left.innerText = options.issuer
 
           let ticket_center = document.createElement('div')
           ticket_center.classList.add('ticket_center')
-          ticket_center.innerText = bits + ' BITS'
+          ticket_center.innerText = options.bits + ' ' + options.unit
           
           let ticket_right = document.createElement('div')
           ticket_right.classList.add('ticket_right')
-          ticket_right.innerText = name
+          ticket_right.innerText = options.name
 
           ticket_border.append(ticket_left)
           ticket_border.append(ticket_center)
           ticket_border.append(ticket_right)
-          
-          this.dom.append(ticket_border)
 
+          this.dom.append(ticket_border)
         }
       }
 

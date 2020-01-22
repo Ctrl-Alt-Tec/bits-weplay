@@ -146,7 +146,7 @@
 
 
       let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
-      UIAppBar.setTitle("Tickets")
+      UIAppBar.setTitle("Bits")
       document.body.prepend(UIAppBar.dom)
 
       let UIModal = new UI.Modal()
@@ -228,8 +228,8 @@
 
       async function getBits(){
         return new Promise((resolve, reject)=>{
-          fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv').then(d=>d.text()).then(data=>{
-            let bits = csvJSON(data, 3).map(l=>({
+          fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQUGvHlwR47g7FO7YpbpgfORDpu0Qu3E-Ic9QQX4IkAtr6HTehOzi0_t1Op_JeYEyViJVQjOQZ4KvGh/pub?gid=1473060646&single=true&output=csv').then(d=>d.text()).then(data=>{
+            let bits = csvJSON(data, 2).map(l=>({
               name: l.Miembro,
               bits: l.Total,
               details: (({Miembro, Total, ...o})=>o)(l)

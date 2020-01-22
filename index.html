@@ -3,13 +3,15 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Ctrl Alt Tec - Bits</title>
+      <title>Quanta - Bits</title>
       <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
       <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
       <link rel="stylesheet" type="text/css" href="style.css">
       <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
       <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+
       <style>
         .leaderboard{
           background: #065894;
@@ -115,11 +117,36 @@
 
     <div class="leaderboard">
     </div>
+    <span>
+      Made with ❤️ by <a href="http://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a>
+    </span>
 
 
     <script>
+
+      //var csv is the CSV file with headers
+      function csvJSON(csv, header){
+        var lines=csv.split("\n");
+        var result = [];
+        var headers=lines[header].split(",");
+        for(var i=1;i<lines.length;i++){
+            var obj = {};
+            var currentline=lines[i].split(",");
+            for(var j=0;j<headers.length;j++){
+                obj[headers[j]] = currentline[j];
+            }
+            result.push(obj);
+        }
+        return result.slice(header)
+      }
+
+ 
+
+
+
+
       let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
-      UIAppBar.setTitle("BITS")
+      UIAppBar.setTitle("Tickets")
       document.body.prepend(UIAppBar.dom)
 
       let UIModal = new UI.Modal()
@@ -139,7 +166,6 @@
           this.dom.append(bitsCont)
           this.dom.append(name)
 
-
           this.dom.addEventListener('click', ()=>{
             UIModal.show(function(){
               let container = document.createElement('div')
@@ -150,7 +176,12 @@
               let title = document.createElement('h1')
               title.innerText = name;
               container.append(title)
-              container.append(new Ticket(name, bits).dom)
+              container.append(new Ticket({
+                bits: bits,
+                name: name, 
+                issuer: 'Quanta',
+                unit: 'Tickets'
+              }).dom)
 
               //container.append(JSON.stringify(details))
               for (const key in details) {
@@ -167,40 +198,44 @@
       }
 
       class Ticket{
-        constructor(name, bits){
+        constructor(options){
           this.dom = document.createElement('div');
           this.dom.classList.add('ticket')
           let ticket_border = document.createElement('div');
           ticket_border.classList.add('ticket_border')
-          
+
           let ticket_left = document.createElement('div')
           ticket_left.classList.add('ticket_left')
-          ticket_left.innerText = 'Ctrl Alt Tec'
+          ticket_left.innerText = options.issuer
 
           let ticket_center = document.createElement('div')
           ticket_center.classList.add('ticket_center')
-          ticket_center.innerText = bits + ' BITS'
+          ticket_center.innerText = options.bits + ' ' + options.unit
           
           let ticket_right = document.createElement('div')
           ticket_right.classList.add('ticket_right')
-          ticket_right.innerText = name
+          ticket_right.innerText = options.name
 
           ticket_border.append(ticket_left)
           ticket_border.append(ticket_center)
           ticket_border.append(ticket_right)
-          
-          this.dom.append(ticket_border)
 
+          this.dom.append(ticket_border)
         }
       }
 
 
       async function getBits(){
         return new Promise((resolve, reject)=>{
-          fetch('https://ctrl-alt-tec-members.herokuapp.com/bits').then(d=>d.json()).then(data=>{
-            data.sort((a, b) => b.bits - a.bits)
-            
-            resolve(data.filter(i=>i.bits != 0))
+          fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv').then(d=>d.text()).then(data=>{
+            let bits = csvJSON(data, 3).map(l=>({
+              name: l.Miembro,
+              bits: l.Total,
+              details: (({Miembro, Total, ...o})=>o)(l)
+            }))
+            console.log(bits)
+            bits.sort((a, b) => b.bits - a.bits)
+            resolve(bits.filter(i=>i.bits != 0))
           })
         })
       }

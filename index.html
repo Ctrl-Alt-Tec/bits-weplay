@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Quanta - Bits</title>
+      <title>Ctrl Alt Tec - Bits</title>
       <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
       <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
@@ -13,8 +13,11 @@
 
 
       <style>
-        .leaderboard{
+        html, body{
           background: #065894;
+
+        }
+        .leaderboard{
           padding: 24px;
           color: white;
           display: flex;
@@ -23,6 +26,11 @@
           align-items: center;
           height: 100%;
         }
+
+        .leaderboard::-webkit-scrollbar{
+          display: none;
+        }
+
         .leaderboard h1{
           width: 50cw
         }
@@ -32,7 +40,6 @@
           justify-content: center;
           align-items: center;
           font-size: 1.5em;
-          min-width: 200px;
           cursor: pointer;
         }
         .leader:hover{
@@ -117,12 +124,16 @@
 
     <div class="leaderboard">
     </div>
-    <span>
+    <span style="display: flex; padding: 16px; flex-direction: column; align-items: center; color: white;">
+
+      <button>Sorteo</button>
+
       Made with ❤️ by <a href="http://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a>
     </span>
 
 
     <script>
+
 
       //var csv is the CSV file with headers
       function csvJSON(csv, header){
@@ -138,9 +149,16 @@
             result.push(obj);
         }
         return result.slice(header)
-      }
+      } 
 
- 
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        //return array;
+        return array[Math.floor(Math.random() * array.length)]
+      }
 
 
 
@@ -161,9 +179,11 @@
           bitsCont.classList.add('bits_cont')
           bitsCont.innerText = bits;
           bitsCont.style.width = bits/Leader.maxBits*70+'vh'
-          this.dom.style.width = bits/Leader.maxBits*70+'vh'
           bitsCont.style.height = bits/Leader.maxBits*70+'vh'
           bitsCont.style.lineHeight = bits/Leader.maxBits*70+'vh'
+          bitsCont.style.fontSize = bits/Leader.maxBits*35+'vh'
+          //this.dom.style.width = bits/Leader.maxBits*70+'vh'
+          //bitsCont.style.lineHeight = bits/Leader.maxBits*70+'vh'
           this.dom.append(bitsCont)
           this.dom.append(name)
 
@@ -180,8 +200,8 @@
               container.append(new Ticket({
                 bits: bits,
                 name: name, 
-                issuer: 'Quanta',
-                unit: 'Tickets'
+                issuer: 'Ctrl Alt Tec',
+                unit: 'Bits'
               }).dom)
 
               //container.append(JSON.stringify(details))
@@ -243,9 +263,17 @@
 
       getBits().then(bits=>{
         Leader.maxBits = bits[0].bits
+        let allBits = []
         for(let leader of bits){
+          for(let i = 0 ; i<leader.bits; i++){
+            allBits.push(leader.name)
+          }
           document.querySelector('.leaderboard').append(new Leader(leader.name, leader.bits, leader.details).dom)
         }
+        document.querySelector("button").addEventListener('click', ()=>{
+          alert(shuffle(allBits))
+
+        })
 
 
       })

@@ -115,12 +115,21 @@
         .altUI_ListViewItem {
           width: 100%;
         }
-
+        #eventAd{
+          margin: 16px;
+          padding: 16px;
+          border: 1px solid;
+          border-radius: 8px;
+          color: rgba(255,255,255,0.5);
+        }
+        #eventAd * {
+          margin: 0
+        }
       </style>
   </head>
 
   <body>
-
+    <div id="eventAd"></div>
     <div class="leaderboard">
     </div>
     <span style="display: flex; padding: 16px; flex-direction: column; align-items: center; color: white;">
@@ -276,6 +285,23 @@
 
 
       })
+      
+      fetch('https://ctrl-alt-tec.hackclub.com/event/event.json').then(data=>data.json()).then(data=>{
+        console.log(data)
+        let eventTitle = document.createElement("h2");
+        eventTitle.innerText = data.title;
+        let eventSubtitle = document.createElement("h3");
+        eventSubtitle.innerText = data.subtitle;
+
+        let eventDetails = document.createElement('div');
+        eventDetails.innerText = `${data.date}, ${data.time}`;
+
+        document.querySelector("#eventAd").append(eventTitle, eventSubtitle, eventDetails)
+        document.querySelector("#eventAd").addEventListener('click', ()=>{
+          window.location.href = "https://ctrl-alt-tec.hackclub.com/event"
+        })
+
+    })
 
     </script>
   </body>

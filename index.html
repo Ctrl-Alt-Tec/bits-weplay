@@ -3,15 +3,17 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <script src="https://cdn.jsdelivr.net/gh/mathusummut/confetti.js/confetti.min.js"></script>
+
       <title>Ctrl Alt Tec - Bits</title>
+
       <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
       <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
       <link rel="stylesheet" type="text/css" href="style.css">
       <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
       <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-
       <style>
         html, body{
           background: #065894;
@@ -25,11 +27,9 @@
           overflow: auto;
           align-items: baseline;
         }
-
         .leaderboard::-webkit-scrollbar{
           display: none;
         }
-
         .leaderboard h1{
           width: 50cw
         }
@@ -66,7 +66,8 @@
           background: #ccb779;
           background-image: radial-gradient(30px circle, white 99%, transparent);
           background-position: 200px 105px;
-          padding: 32px
+          padding: 32px;
+          text-align: center;
         }
 
         .ticket_border{
@@ -115,6 +116,22 @@
         .altUI_ListViewItem {
           width: 100%;
         }
+
+        [name="winner"]{
+          padding: 16px;
+          margin: 16px;
+          background: black;
+          color: white;
+          font-size: 1.5em;
+        }
+
+        [name="medal"]{
+          box-shadow: inset 3px 3px 3px rgba(255,255,255,.7), inset -2px -2px 3px;
+          height: 400px; width: 400px;
+          border-radius: 200px;
+          background: gold;
+        }
+
         #eventAd{
           margin: 16px;
           padding: 16px;
@@ -126,6 +143,11 @@
           margin: 0
         }
       </style>
+      <!-- 
+      ENABLE CONSOLE FOR DEBUGGING  
+      <script src="https://cdn.jsdelivr.net/npm/vconsole"></script>
+      <script>new VConsole()</script> 
+      -->
   </head>
 
   <body>
@@ -141,9 +163,14 @@
 
 
     <script>
+      // Set up altUI
+      let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
+      UIAppBar.setTitle("Tickets")
+      document.body.prepend(UIAppBar.dom)
+      let UIModal = new UI.Modal()
+      document.body.prepend(UIModal.dom)
 
-
-      //var csv is the CSV file with headers
+      // CONVERT CSV TO JSON
       function csvJSON(csv, header){
         var lines=csv.split("\n");
         var result = [];
@@ -159,133 +186,161 @@
         return result.slice(header)
       } 
 
-      function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
+
+      // Participant clas
+      class Participant{
+        constructor(options){
+          this.name = options.name;
+          this.bits = options.bits;
+          this.details = options.details;
+          this.issuer = altBits.issuer;
+          this.unit = altBits.unit
         }
-        //return array;
-        return array[Math.floor(Math.random() * array.length)]
-      }
-
-
-
-
-      let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
-      UIAppBar.setTitle("Bits")
-      document.body.prepend(UIAppBar.dom)
-
-      let UIModal = new UI.Modal()
-      document.body.prepend(UIModal.dom)
-
-
-      class Leader{
-        constructor(name, bits, details){
+        // Render ball
+        renderBall(){
           this.dom = document.createElement('div');
           this.dom.classList.add('leader');
           let bitsCont = document.createElement('div');
           bitsCont.classList.add('bits_cont')
-          bitsCont.innerText = bits;
-          bitsCont.style.width = bits/Leader.maxBits*70+'vh'
-          bitsCont.style.height = bits/Leader.maxBits*70+'vh'
-          bitsCont.style.lineHeight = bits/Leader.maxBits*70+'vh'
-          bitsCont.style.fontSize = bits/Leader.maxBits*35+'vh'
-          //this.dom.style.width = bits/Leader.maxBits*70+'vh'
-          //bitsCont.style.lineHeight = bits/Leader.maxBits*70+'vh'
-          this.dom.append(bitsCont)
-          this.dom.append(name)
-
-          this.dom.addEventListener('click', ()=>{
-            UIModal.show(function(){
-              let container = document.createElement('div')
-              container.style.padding = "8px";
-              container.style.display = "flex";
-              container.style.flexDirection = "column";
-              container.style.alignItems = "center"; 
-              let title = document.createElement('h1')
-              title.innerText = name;
-              container.append(title)
-              container.append(new Ticket({
-                bits: bits,
-                name: name, 
-                issuer: 'Ctrl Alt Tec',
-                unit: 'Bits'
-              }).dom)
-
-              //container.append(JSON.stringify(details))
-              for (const key in details) {
-                if(details[key] > 0){
-                  container.append( new UI.ListViewItemKeyValue(key, details[key]).dom )
-                }
-              }
-
-              return container;
-            }(), "Detalles")
-          })
-
+          bitsCont.innerText = this.bits;
+          bitsCont.style.width = this.bits/Participant.maxBits*70+'vh'
+          bitsCont.style.height = this.bits/Participant.maxBits*70+'vh'
+          bitsCont.style.lineHeight = this.bits/Participant.maxBits*70+'vh'
+          bitsCont.style.fontSize = this.bits/Participant.maxBits*35+'vh'
+          this.dom.append(bitsCont, this.name)
+          this.dom.addEventListener('click', this.renderDetails.bind(this)) 
+          return this.dom
         }
-      }
-
-      class Ticket{
-        constructor(options){
-          this.dom = document.createElement('div');
-          this.dom.classList.add('ticket')
+        // Render modal window containing details
+        renderDetails(){
+          let container = document.createElement('div')
+          container.style.padding = "8px";
+          container.style.display = "flex";
+          container.style.flexDirection = "column";
+          container.style.alignItems = "center"; 
+          let title = document.createElement('h1')
+          title.innerText = this.name;
+          container.append(title)
+          container.append(this.renderTicket())
+          for (const key in this.details) {
+            if(this.details[key] > 0){
+              container.append( new UI.ListViewItemKeyValue(key, this.details[key]).dom )
+            }
+          }
+          UIModal.show(container, 'Detalles')
+        }
+        // Render ticket
+        renderTicket(){
+          let ticket = document.createElement('div');
+          ticket.classList.add('ticket')
           let ticket_border = document.createElement('div');
           ticket_border.classList.add('ticket_border')
-
           let ticket_left = document.createElement('div')
           ticket_left.classList.add('ticket_left')
-          ticket_left.innerText = options.issuer
-
+          ticket_left.innerText = this.issuer
           let ticket_center = document.createElement('div')
           ticket_center.classList.add('ticket_center')
-          ticket_center.innerText = options.bits + ' ' + options.unit
-          
+          ticket_center.innerText = this.bits + ' ' + this.unit
           let ticket_right = document.createElement('div')
           ticket_right.classList.add('ticket_right')
-          ticket_right.innerText = options.name
-
+          ticket_right.innerText = this.name
           ticket_border.append(ticket_left)
           ticket_border.append(ticket_center)
           ticket_border.append(ticket_right)
-
-          this.dom.append(ticket_border)
+          ticket.append(ticket_border)
+          return ticket
         }
       }
-
-
-      async function getBits(){
-        return new Promise((resolve, reject)=>{
-          fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQUGvHlwR47g7FO7YpbpgfORDpu0Qu3E-Ic9QQX4IkAtr6HTehOzi0_t1Op_JeYEyViJVQjOQZ4KvGh/pub?gid=1473060646&single=true&output=csv').then(d=>d.text()).then(data=>{
-            let bits = csvJSON(data, 0).map(l=>({
-              name: l.Nombre,
-              bits: l.Bits,
-              details: (({Miembro, Total, ...o})=>o)(l)
-            }))
-            console.log(bits)
-            bits.sort((a, b) => b.bits - a.bits)
-            resolve(bits.filter(i=>i.bits != 0))
-          })
-        })
-      }
-
-      getBits().then(bits=>{
-        Leader.maxBits = bits[0].bits
-        let allBits = []
-        for(let leader of bits){
-          for(let i = 0 ; i<leader.bits; i++){
-            allBits.push(leader.name)
+      class altBits{
+        constructor(options){
+          altBits.issuer = options.issuer;
+          altBits.unit = options.unit;
+          this.bits = []
+        }
+        // Get bits from URL, specify headers names
+        async getBits(url, options){
+          options.container.innerHTML = ""
+          let bits_raw = await fetch(url)
+          let bits_json = csvJSON( await bits_raw.text(), 3 )
+          let bits = bits_json
+            .map(l=>(
+              new Participant({
+                name: l[options.name],
+                bits: l[options.bits],
+                details: (({name, bits, ...o})=>o)(l)
+              })
+            ))
+            .sort((a, b) => b.bits - a.bits)
+            .filter(i=>i.bits != 0)
+          console.log(bits)
+          Participant.maxBits = bits[0].bits
+          options.container.append(...bits.map(l=>l.renderBall()))
+          options.randomButton.addEventListener('click', this.selectWinner.bind(this))
+          this.bits = bits;
+        }
+        // Modal window with winner name
+        renderWinnerModal(winner){
+          confetti.start(3000)
+          let container = document.createElement('div');
+          container.style.padding = '8px'
+          container.style.display = 'flex';
+          container.style.flexDirection = 'column';
+          container.style.alignContent = 'center'
+          container.style.alignItems = 'center'
+          container.style.justifyContent = 'center'
+          let title =  document.createElement('h1');
+          title.innerText = 'Felicidades';
+          let medal = document.createElement('div');
+          medal.setAttribute('name', 'medal')
+          let winner_cont = document.createElement('div');
+          winner_cont.setAttribute('name', 'winner');
+          winner_cont.innerHTML = winner
+          container.append(medal, title, winner_cont)
+          UIModal.show(container, 'Felicitaciones')
+        }
+        // Add accumulated bits (for randomnizer)
+        setAccumulatedBits(){
+          for(let i=0; i < this.bits.length; i++) {
+            if(i != 0) {
+              this.bits[i]['sum_bits'] = Number(this.bits[i-1]['sum_bits']) + Number(this.bits[i]['bits'])
+            } else {
+              this.bits[i]['sum_bits'] =  Number(this.bits[i]['bits'])
+            }
           }
-          document.querySelector('.leaderboard').append(new Leader(leader.name, leader.bits, leader.details).dom)
+          return this.bits
         }
-        document.querySelector("button").addEventListener('click', ()=>{
-          alert(shuffle(allBits))
+        // Select Winner
+        selectWinner(){
+          let winner;
+          Math.randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
+          this.setAccumulatedBits()
+          //index refers to the winning index
+          let index = Math.randomFrom1(this.bits[this.bits.length-1]['sum_bits'])
+          //Iterate until first sight of winner
+          for(let i = 0; i<this.bits.length; i++) {
+            if(index <= this.bits[i]['sum_bits'])	{
+              winner = this.bits[i]['name'];
+              break;
+            }
+          }
+          this.renderWinnerModal(winner)
+        }
+      }
 
-        })
 
 
+      
+      new altBits({
+        issuer: 'Ctrl Alt Tec',
+        unit: 'Bits'
+      }).getBits('https://docs.google.com/spreadsheets/d/e/2PACX-1vQUGvHlwR47g7FO7YpbpgfORDpu0Qu3E-Ic9QQX4IkAtr6HTehOzi0_t1Op_JeYEyViJVQjOQZ4KvGh/pub?gid=1473060646&single=true&output=csv', {
+        name: 'Nombre',
+        bits: 'Bits',
+        container: document.querySelector('.leaderboard'),
+        randomButton: document.querySelector('button')
       })
       
+
       fetch('https://ctrl-alt-tec.hackclub.com/event/event.json').then(data=>data.json()).then(data=>{
         console.log(data)
         let eventTitle = document.createElement("h2");

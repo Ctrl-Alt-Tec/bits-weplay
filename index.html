@@ -3,18 +3,17 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+      <title>Quanta - Tickets</title>
       <script src="https://cdn.jsdelivr.net/gh/mathusummut/confetti.js/confetti.min.js"></script>
-
-      <title>Ctrl Alt Tec - Bits</title>
-
       <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
       <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
       <link rel="stylesheet" type="text/css" href="style.css">
       <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
       <link rel="icon" href="favicon.ico" type="image/x-icon">
-      <style>
+
+
+           <style>
         html, body{
           background: #065894;
 
@@ -27,9 +26,11 @@
           overflow: auto;
           align-items: baseline;
         }
+
         .leaderboard::-webkit-scrollbar{
           display: none;
         }
+
         .leaderboard h1{
           width: 50cw
         }
@@ -132,16 +133,6 @@
           background: gold;
         }
 
-        #eventAd{
-          margin: 16px;
-          padding: 16px;
-          border: 1px solid;
-          border-radius: 8px;
-          color: rgba(255,255,255,0.5);
-        }
-        #eventAd * {
-          margin: 0
-        }
       </style>
       <!-- 
       ENABLE CONSOLE FOR DEBUGGING  
@@ -151,7 +142,7 @@
   </head>
 
   <body>
-    <div id="eventAd"></div>
+
     <div class="leaderboard">
     </div>
     <span style="display: flex; padding: 16px; flex-direction: column; align-items: center; color: white;">
@@ -184,8 +175,7 @@
             result.push(obj);
         }
         return result.slice(header)
-      } 
-
+      }
 
       // Participant clas
       class Participant{
@@ -251,6 +241,7 @@
           return ticket
         }
       }
+
       class altBits{
         constructor(options){
           altBits.issuer = options.issuer;
@@ -261,7 +252,7 @@
         async getBits(url, options){
           options.container.innerHTML = ""
           let bits_raw = await fetch(url)
-          let bits_json = csvJSON( await bits_raw.text(), 0 )
+          let bits_json = csvJSON( await bits_raw.text(), 3 )
           let bits = bits_json
             .map(l=>(
               new Participant({
@@ -301,7 +292,7 @@
         // Add accumulated bits (for randomnizer)
         setAccumulatedBits(){
           for(let i=0; i < this.bits.length; i++) {
-            if(i != 0) {
+            if(i != 0) {
               this.bits[i]['sum_bits'] = Number(this.bits[i-1]['sum_bits']) + Number(this.bits[i]['bits'])
             } else {
               this.bits[i]['sum_bits'] =  Number(this.bits[i]['bits'])
@@ -311,7 +302,7 @@
         }
         // Select Winner
         selectWinner(){
-          let winner;
+          let winner = "";
           Math.randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
           this.setAccumulatedBits()
           //index refers to the winning index
@@ -324,40 +315,25 @@
             }
           }
           this.renderWinnerModal(winner)
+          //return winner;
         }
       }
 
 
-
-      
-      new altBits({
-        issuer: 'Ctrl Alt Tec',
-        unit: 'Bits'
-      }).getBits('https://docs.google.com/spreadsheets/d/e/2PACX-1vQUGvHlwR47g7FO7YpbpgfORDpu0Qu3E-Ic9QQX4IkAtr6HTehOzi0_t1Op_JeYEyViJVQjOQZ4KvGh/pub?gid=1473060646&single=true&output=csv', {
-        name: 'Nombre',
-        bits: 'Bits',
-        container: document.querySelector('.leaderboard'),
-        randomButton: document.querySelector('button')
+      bitsHandler =  new altBits({
+        issuer: 'Quanta',
+        unit: 'Tickets'
       })
       
-
-      fetch('https://ctrl-alt-tec.hackclub.com/event/event.json').then(data=>data.json()).then(data=>{
-        console.log(data)
-        let eventTitle = document.createElement("h2");
-        eventTitle.innerText = data.title;
-        let eventSubtitle = document.createElement("h3");
-        eventSubtitle.innerText = data.subtitle;
-
-        let eventDetails = document.createElement('div');
-        eventDetails.innerText = `${data.date}, ${data.time}`;
-
-        document.querySelector("#eventAd").append(eventTitle, eventSubtitle, eventDetails)
-        document.querySelector("#eventAd").addEventListener('click', ()=>{
-          window.location.href = "https://ctrl-alt-tec.hackclub.com/event"
-        })
-
-    })
-
+      bitsHandler.getBits('https://docs.google.com/spreadsheets/d/e/2PACX-1vT5X_u5aCrrDoamNNZcxdnsMh14xDFeQsvhJlmQMT9PeRw_j9ape4AFEP_85DTLh9KPjd9m7rnOTPcO/pub?output=csv',
+                          {
+                              name: 'Miembro',
+                              bits: 'Total',
+                              container: document.querySelector('.leaderboard'),
+                              randomButton: document.querySelector('button')
+                          }
+                         )
+      
     </script>
   </body>
 </html>

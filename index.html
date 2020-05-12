@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Quanta - Tickets</title>
+      <title>Ctrl Alt Tec - Bits</title>
       <script src="https://cdn.jsdelivr.net/gh/mathusummut/confetti.js/confetti.min.js"></script>
       <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
       <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
@@ -252,7 +252,7 @@
         async getBits(url, options){
           options.container.innerHTML = ""
           let bits_raw = await fetch(url)
-          let bits_json = csvJSON( await bits_raw.text(), 3 )
+          let bits_json = csvJSON( await bits_raw.text(), 0 )
           let bits = bits_json
             .map(l=>(
               new Participant({
@@ -330,7 +330,7 @@
         bits: 'Bits',
         container: document.querySelector('.leaderboard'),
         randomButton: document.querySelector('button')
-      })
+      }) 
       
     </script>
   </body>

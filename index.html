@@ -252,7 +252,7 @@
         async getBits(url, options){
           options.container.innerHTML = ""
           let bits_raw = await fetch(url)
-          let bits_json = csvJSON( await bits_raw.text(), 3 )
+          let bits_json = csvJSON( await bits_raw.text(), 0 )
           let bits = bits_json
             .map(l=>(
               new Participant({

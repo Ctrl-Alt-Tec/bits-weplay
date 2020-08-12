@@ -235,8 +235,9 @@
         // Get bits from URL, specify headers names
         async getBits(url, options){
           options.container.innerHTML = ""
-          let bits_json = await fetch(url)
-          let bits = bits_json
+          let bits_raw = await fetch(url),
+              bits_json = await bits_raw.json(),
+              bits = bits_json
             .map(l=>(
               new Participant({
                 name: l[options.name],

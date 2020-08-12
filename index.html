@@ -161,22 +161,6 @@
       let UIModal = new UI.Modal()
       document.body.prepend(UIModal.dom)
 
-      // CONVERT CSV TO JSON
-      function csvJSON(csv, header){
-        var lines=csv.split("\n");
-        var result = [];
-        var headers=lines[header].split(",");
-        for(var i=1;i<lines.length;i++){
-            var obj = {};
-            var currentline=lines[i].split(",");
-            for(var j=0;j<headers.length;j++){
-                obj[headers[j]] = currentline[j];
-            }
-            result.push(obj);
-        }
-        return result.slice(header)
-      }
-
       // Participant clas
       class Participant{
         constructor(options){
@@ -251,8 +235,7 @@
         // Get bits from URL, specify headers names
         async getBits(url, options){
           options.container.innerHTML = ""
-          let bits_raw = await fetch(url)
-          let bits_json = csvJSON( await bits_raw.text(), 0 )
+          let bits_json = await fetch(url)
           let bits = bits_json
             .map(l=>(
               new Participant({

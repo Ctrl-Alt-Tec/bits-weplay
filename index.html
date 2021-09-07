@@ -1,321 +1,86 @@
 <!DOCTYPE html>
-<html>
-  <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Ctrl Alt Tec - Bits</title>
-      <script src="https://cdn.jsdelivr.net/gh/mathusummut/confetti.js/confetti.min.js"></script>
-      <script src="https://ctrl-alt-tec.github.io/altUI/altUI.js?v=3"></script>
-      <link href="https://ctrl-alt-tec.github.io/altUI/altUI.css" rel="stylesheet">
-      <link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'>
-      <link rel="stylesheet" type="text/css" href="style.css">
-      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-      <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-
-           <style>
-        html, body{
-          background: #065894;
-
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ctrl Alt Tec Bits</title>
+    <style>
+        body{
+            background: #f9f9fa;
+            font-family: ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Fira Sans", Oxygen, Ubuntu, "Helvetica Neue", sans-serif
         }
-        .leaderboard{
-          padding: 24px;
-          color: white;
-          display: flex;
-          flex-direction: row;
-          overflow: auto;
-          align-items: baseline;
-        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bits</h1>
+    </header>
+    <section>
 
-        .leaderboard::-webkit-scrollbar{
-          display: none;
-        }
-
-        .leaderboard h1{
-          width: 50cw
-        }
-        .leader{
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          font-size: 1.5em;
-          cursor: pointer;
-        }
-        .leader:hover{
-          transform: scale(1.05);
-        }
-
-        .bits_cont{
-          width: 120px;
-          height: 120px;
-          border-radius: 50%;
-          margin: 8px;
-          background-color: #FBDA61;
-          background-image: linear-gradient(45deg, #FBDA61 0%, #FF5ACD 100%);
-          color: white;
-          font-weight: 600;
-          font-size: 3em;
-          text-align: center;
-          line-height: 1.5em;
-          box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
-        }
-
-        .ticket{
-          width: 400px;
-          height: 210px;
-          background: #ccb779;
-          background-image: radial-gradient(30px circle, white 99%, transparent);
-          background-position: 200px 105px;
-          padding: 32px;
-          text-align: center;
-        }
-
-        .ticket_border{
-          width: 100%;
-          height: 100%;
-          border: 1px solid black;
-          border-radius: 32px;
-          display: flex;
-        }
-
-        .ticket_left,.ticket_right{
-          display: flex;
-          text-orientation: sideways;
-          writing-mode:vertical-rl;
-          justify-content: center;
-          align-content: center;
-          align-items: center;
-        }
-
-        .ticket_left{
-          flex: 1;
-          border-right: 1px solid black;
-          
-        }
-        .ticket_center{
-          flex: 4;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          font-size: 3em;
-          font-weight: 600;
-        }
-        .ticket_right{
-          flex: 1;
-          border-left: 1px solid black;
-        }
-
-        h1{
-          margin: 0;
-          font-size: 3em;
-          font-weight: 800;
-          
-        }
-
-        .altUI_ListViewItem {
-          width: 100%;
-        }
-
-        [name="winner"]{
-          padding: 16px;
-          margin: 16px;
-          background: black;
-          color: white;
-          font-size: 1.5em;
-        }
-
-        [name="medal"]{
-          box-shadow: inset 3px 3px 3px rgba(255,255,255,.7), inset -2px -2px 3px;
-          height: 400px; width: 400px;
-          border-radius: 200px;
-          background: gold;
-        }
-
-      </style>
-      <!-- 
-      ENABLE CONSOLE FOR DEBUGGING  
-      <script src="https://cdn.jsdelivr.net/npm/vconsole"></script>
-      <script>new VConsole()</script> 
-      -->
-  </head>
-
-  <body>
-
-    <div class="leaderboard">
-    </div>
-    <span style="display: flex; padding: 16px; flex-direction: column; align-items: center; color: white;">
-
-      <button>Sorteo</button>
-
-      Made with ❤️ by <a href="http://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a>
-    </span>
+    </section>
 
 
     <script>
-      // Set up altUI
-      let UIAppBar = new UI.AppBar('LOGO-INLINE.png', '')
-      UIAppBar.setTitle("Bits")
-      document.body.prepend(UIAppBar.dom)
-      let UIModal = new UI.Modal()
-      document.body.prepend(UIModal.dom)
+        fetch('http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec').then(d=>d.json()).then(data=>{
+            Object.values(data.members)
+                .sort((a, b) => b._participations?.total - a._participations?.total)
+                .forEach(member=>{
+                    let element = document.createElement('p');
+                    element.innerHTML = `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}`;
 
-      // Participant clas
-      class Participant{
-        constructor(options){
-          this.name = options.name;
-          this.bits = options.bits;
-          this.details = options.details;
-          this.issuer = altBits.issuer;
-          this.unit = altBits.unit
-        }
-        // Render ball
-        renderBall(){
-          this.dom = document.createElement('div');
-          this.dom.classList.add('leader');
-          let bitsCont = document.createElement('div');
-          bitsCont.classList.add('bits_cont')
-          bitsCont.innerText = this.bits;
-          bitsCont.style.width = this.bits/Participant.maxBits*70+'vh'
-          bitsCont.style.height = this.bits/Participant.maxBits*70+'vh'
-          bitsCont.style.lineHeight = this.bits/Participant.maxBits*70+'vh'
-          bitsCont.style.fontSize = this.bits/Participant.maxBits*35+'vh'
-          this.dom.append(bitsCont, this.name)
-          this.dom.addEventListener('click', this.renderDetails.bind(this)) 
-          return this.dom
-        }
-        // Render modal window containing details
-        renderDetails(){
-          let container = document.createElement('div')
-          container.style.padding = "8px";
-          container.style.display = "flex";
-          container.style.flexDirection = "column";
-          container.style.alignItems = "center"; 
-          let title = document.createElement('h1')
-          title.innerText = this.name;
-          container.append(title)
-          container.append(this.renderTicket())
-          for (const key in this.details) {
-            if(this.details[key] > 0){
-              container.append( new UI.ListViewItemKeyValue(key, this.details[key]).dom )
-            }
-          }
-          UIModal.show(container, 'Detalles')
-        }
-        // Render ticket
-        renderTicket(){
-          let ticket = document.createElement('div');
-          ticket.classList.add('ticket')
-          let ticket_border = document.createElement('div');
-          ticket_border.classList.add('ticket_border')
-          let ticket_left = document.createElement('div')
-          ticket_left.classList.add('ticket_left')
-          ticket_left.innerText = this.issuer
-          let ticket_center = document.createElement('div')
-          ticket_center.classList.add('ticket_center')
-          ticket_center.innerText = this.bits + ' ' + this.unit
-          let ticket_right = document.createElement('div')
-          ticket_right.classList.add('ticket_right')
-          ticket_right.innerText = this.name
-          ticket_border.append(ticket_left)
-          ticket_border.append(ticket_center)
-          ticket_border.append(ticket_right)
-          ticket.append(ticket_border)
-          return ticket
-        }
-      }
-
-      class altBits{
-        constructor(options){
-          altBits.issuer = options.issuer;
-          altBits.unit = options.unit;
-          this.bits = []
-        }
-        // Get bits from URL, specify headers names
-        async getBits(url, options){
-          options.container.innerHTML = ""
-          let bits_raw = await fetch(url),
-              bits_json = await bits_raw.json(),
-              bits = bits_json
-            .map(l=>(
-              new Participant({
-                name: l[options.name],
-                bits: l[options.bits],
-                details: (({name, bits, ...o})=>o)(l)
-              })
-            ))
-            .sort((a, b) => b.bits - a.bits)
-            .filter(i=>i.bits != 0)
-          console.log(bits)
-          Participant.maxBits = bits[0].bits
-          options.container.append(...bits.map(l=>l.renderBall()))
-          options.randomButton.addEventListener('click', this.selectWinner.bind(this))
-          this.bits = bits;
-        }
-        // Modal window with winner name
-        renderWinnerModal(winner){
-          confetti.start(3000)
-          let container = document.createElement('div');
-          container.style.padding = '8px'
-          container.style.display = 'flex';
-          container.style.flexDirection = 'column';
-          container.style.alignContent = 'center'
-          container.style.alignItems = 'center'
-          container.style.justifyContent = 'center'
-          let title =  document.createElement('h1');
-          title.innerText = 'Felicidades';
-          let medal = document.createElement('div');
-          medal.setAttribute('name', 'medal')
-          let winner_cont = document.createElement('div');
-          winner_cont.setAttribute('name', 'winner');
-          winner_cont.innerHTML = winner
-          container.append(medal, title, winner_cont)
-          UIModal.show(container, 'Felicitaciones')
-        }
-        // Add accumulated bits (for randomnizer)
-        setAccumulatedBits(){
-          for(let i=0; i < this.bits.length; i++) {
-            if(i != 0) {
-              this.bits[i]['sum_bits'] = Number(this.bits[i-1]['sum_bits']) + Number(this.bits[i]['bits'])
-            } else {
-              this.bits[i]['sum_bits'] =  Number(this.bits[i]['bits'])
-            }
-          }
-          return this.bits
-        }
-        // Select Winner
-        selectWinner(){
-          let winner = "";
-          Math.randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
-          this.setAccumulatedBits()
-          //index refers to the winning index
-          let index = Math.randomFrom1(this.bits[this.bits.length-1]['sum_bits'])
-          //Iterate until first sight of winner
-          for(let i = 0; i<this.bits.length; i++) {
-            if(index <= this.bits[i]['sum_bits'])	{
-              winner = this.bits[i]['name'];
-              break;
-            }
-          }
-          this.renderWinnerModal(winner)
-          //return winner;
-        }
-      }
+                    element.addEventListener('click', e=>{
+                        let modal = document.createElement('alt-ui-modal');
+                        let memberDetails = document.createElement('alt-member-detail');
+                        memberDetails.setAttribute('img-src', `http://ctrl-api.hackclub.com/utils/identicon/${member['Matrícula']}`);
+                        memberDetails.setAttribute('member-name', `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}`)
+                        memberDetails.setAttribute('member-id', member['Matrícula'])
+                        memberDetails.setAttribute('member-total', member._participations.total)
+                        memberDetails.setAttribute('member-academic-program', member['Programa/Carrera (Siglas)']);
+                        memberDetails.setAttribute('member-academic-semester', member['Semestre']);
+                        member._participations.participations.forEach(memberDetails.addParticipation.bind(memberDetails));
+                        modal.append(memberDetails);
+                        document.body.append(modal)
+                    })
 
 
-      bitsHandler =  new altBits({
-        issuer: 'Ctrl Alt Tec',
-        unit: 'Bits'
-      })
-      
-      bitsHandler.getBits('https://ctrl-alt-tec.herokuapp.com/grupoestudiantil/miembrosybits/bits', {
-        name: 'nombrecompleto',
-        bits: 'bits',
-        container: document.querySelector('.leaderboard'),
-        randomButton: document.querySelector('button')
-      }) 
-      
+                    document.querySelector('section').append(element);
+
+                })
+        })
+
+
+
+
+        /* fetch('http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec').then(d=>d.json()).then(data=>{
+            Object.values(data.members).sort((a, b) => b?._participations?.total - a?._participations?.total).forEach(member => {
+                let div = document.createElement('div');
+                div.style.padding = '16px';
+                div.innerHTML = JSON.stringify(member);
+                document.querySelector('section').append(div)
+
+                div.addEventListener('click', e=>{
+                    let modal = document.createElement('alt-ui-modal');
+                    let details = document.createElement('alt-member-detail');
+                    details.setAttribute('img-src', `http://ctrl-api.hackclub.com/utils/identicon/${member['Matrícula']}`);
+                    details.setAttribute('member-name', `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}`)
+                    details.setAttribute('member-id', member['Matrícula'])
+                    details.setAttribute('member-total', member._participations.total)
+                    details.setAttribute('member-academic-program', member['Programa/Carrera (Siglas)']);
+                    details.setAttribute('member-academic-semester', member['Semestre'])
+
+                    member._participations.participations.forEach(participation=>{
+                        details.addParticipation(participation);
+                    })
+
+
+                    modal.append(details);
+                    document.body.append(modal)
+                })
+
+            })
+        }) */
     </script>
-  </body>
+    <script src="./index.js" type="module"></script>
+</body>
 </html>

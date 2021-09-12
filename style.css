@@ -1,0 +1,36 @@
+:root{
+    --color-hackclub-smoke: #dde1e4;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header{
+    padding: 16px;
+    background: var(--color-hackclub-smoke);
+}
+header>h1{
+    margin: 0;
+}
+
+section{
+    padding: 16px;
+}
+section>h1{
+    font-size: 3rem;
+}
+
+#carrousel{
+    padding: 16px;
+    overflow: auto;
+    background: var(--color-hackclub-smoke);
+}
+
+#participations>*,
+#about>*{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}

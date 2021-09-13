@@ -115,7 +115,7 @@ class BitsCarrousel extends HTMLElement{
 }
 
 const BitsCarrouselRandoms = {
-    randomnizeArray = array => {
+    randomnizeArray: array => {
         for(let i = array.length - 1; i > 0; i--){
             const j = Math.floor(Math.random() * (i+1));
             const temp = array[i];
@@ -124,7 +124,7 @@ const BitsCarrouselRandoms = {
         }
         return array;
     }, 
-    randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
+    randomFrom1: (max) => Math.floor( Math.random() * (max) ) + 1
 }
 
 

@@ -83,5 +83,36 @@ class BitsCarrousel extends HTMLElement{
         participant.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
         participant.click();
     }
+    selectRandom(){
+        // Store here all the id's
+        let names = [];
+        // For each participant
+        Object.keys(this.participants).forEach(id=>{
+            // Store id as many times as they have points
+            for(let i = 0; i<this.participants[id].value; i++){
+                names.push(id);
+            }
+        });
+        // Randomnize array
+        let names_random = randomnizeArray(names);
+        // Get random index
+        let index = Math.randomFrom1(names_random.length);
+        let winnerID = names_random[index];
+        this.highlightParticipant(winnerID);
+        return winnerID;
+    }
 }
+
+const randomnizeArray = array => {
+    for(let i = array.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i+1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+Math.randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
+
 customElements.define('alt-bits-carrousel', BitsCarrousel);

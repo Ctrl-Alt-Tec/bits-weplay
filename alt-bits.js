@@ -4,6 +4,8 @@ async function load(){
     let json = await raw.json();
     let members = Object.values(json.members).sort((a, b)=>(b?._participations?.total || 0) - (a?._participations.total || 0));
 
+    let participations = {};
+
     members.forEach(member=>{
         document.querySelector('#bits-carrousel').addParticipant({
             name: `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}` || 'Unasigned',
@@ -11,6 +13,7 @@ async function load(){
             score: member?._participations?.total || 1
         })
     })
+
 
 
 }

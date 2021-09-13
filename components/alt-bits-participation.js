@@ -1,3 +1,63 @@
+const BitsParticipationTemplate = document.createElement('template');
+BitsParticipationTemplate.innerHTML = `
+    <style>
+        :host{
+            display: block;
+            padding: 16px 8px;
+            margin-left: -8px;
+            margin-right: -8px
+        }
+        :host>div{
+            display: flex;
+            align-items: center;
+            column-gap: 8px
+        }
+        :host .participation-content{
+            flex: 1;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            row-gap: 4px;
+        }
+        :host .participation-category{
+            font-size: 1rem; 
+            font-weight: 600;
+            background-color: grey;
+            padding: 2px 8px;
+            border-radius: 16px;
+            color: white;
+            margin-left: -2px
+        }
+        :host .participation-date{
+            color: grey;
+            font-weight: 600;
+        }
+        :host .participation-description{
+            font-size: 1.1rem;
+            font-weight: 600
+        }
+        :host .participation-score{
+            height: 32px;
+            width: 32px;
+            border-radius: 16px;
+            background-color: black;
+            color: white;
+            line-height: 32px;
+            text-align: center;
+        }
+    </style>
+    <div>
+        <div class='participation-content'>
+            <div class='participation-data'>
+                <span class='participation-category'>Categoria</span>
+                <span class='participation-date'>Fecha</span>
+            </div>
+            <div class='participation-description'>Descripcion</div>
+        </div>
+        <div class='participation-score'>3</div>
+    </div>
+`
+
 class BitsParticipation extends HTMLElement {
     static get observedAttributes(){
         return ['participation-date', 'participation-category', 'participation-description', 'participation-score'];
@@ -21,66 +81,17 @@ class BitsParticipation extends HTMLElement {
     connectedCallback(){
         this.render();
     }
+    attributeChangedCallback(){
+        this.render();
+    }
     render(){
-        this.style.display = 'flex';
-        this.style.alignItems = 'center';
-        this.style.padding = '16px 0px'
         this.shadowRoot.innerHTML = '';
-
-        let div = document.createElement('div');
-        div.style.display = 'flex';
-        div.style.flexDirection = 'column';
-        div.style.rowGap = '2px';
-        div.style.flexGrow = '1';
-
-        let description = document.createElement('div');
-        description.style.fontSize = '1.2rem';
-        description.style.fontWeight = '600';
-        description.innerHTML = this.description;
-
-        let score = document.createElement('div');
-        score.innerHTML = this.score;
-        Object.assign(score.style, {
-            height: '44px', 
-            width: '44px', 
-            borderRadius: '22px', 
-            backgroundColor: 'black', 
-            color: 'white', 
-            fontSize: '24px'
-        })
-
-        div.append(this.renderInfo(), description);
-
-        this.shadowRoot.append(div, score);
-
+        this.shadowRoot.append( BitsParticipationTemplate.content.cloneNode(true) );
+        this.shadowRoot.querySelector('.participation-category').innerHTML = this.category;
+        this.shadowRoot.querySelector('.participation-date').innerHTML = this.date;
+        this.shadowRoot.querySelector('.participation-description').innerHTML = this.description;
+        this.shadowRoot.querySelector('.participation-score').innerHTML = this.score;
     }
-    renderInfo(){
-        let container = document.createElement('div');
-        Object.assign(container.style, {
-            display: 'flex', 
-            columnGap: '8px',
-            alignItems: 'center'
-        });
-        let category = document.createElement('span');
-        category.innerHTML = this.category;
-        Object.assign(category.style, {
-            padding: '4px 8px',
-            borderRadius: '16px', 
-            backgroundColor: 'grey',
-            color: 'white',
-            fontWeight: '600',
-            fontSize: '1rem'
-        });
-        let date = document.createElement('span');
-        date.innerHTML = this.date;
-        Object.assign(date.style, {
-            color: 'grey',
-            fontWeight: '606'
-        });
-        container.append(category, date);
-        return container;
-    }
-
 }
 
 customElements.define('alt-bits-participation', BitsParticipation);

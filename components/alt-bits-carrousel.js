@@ -1,111 +1,80 @@
-class BitsCarrouselParticipant extends DynamicCircle{
-    static get observedAttributes(){
-        return ['participant-name']
-    }
-    get participantName(){
-        return this.getAttribute('participant-name');
-    }
-    constructor(){
-        super();
-    }
-    attributeChangedCallback(name, oldValue, newValue){
-        super.attributeChangedCallback(name, oldValue, newValue);
-        this.render();
-    }
-    render(){
-        super.render();
-        this.style.display = 'flex'
-        this.style.flexDirection = 'column';
-        this.style.alignItems = 'center';
-        this.innerHTML = '';
-        this.append(this.renderFill());
-        this.shadowRoot.append(this.renderBadge());
-    }
-    renderBadge(){
-        let badge = document.createElement('div');
-        badge.style.fontSize = '1rem';
-        badge.style.fontWeight = 'bold';
-        badge.style.margin = '8px';
-        badge.style.width = '240px';
-        badge.style.textAlign = 'center';
-        badge.innerHTML = this.participantName;
-        return badge;
-    }
-    renderFill(){
-        let fill = document.createElement('div');
-        fill.style.height = '100%';
-        fill.style.width = '100%';
-        fill.style.borderRadius = '10000px';
-        fill.style.background = 'black';
-        fill.style.color = 'white';
-        fill.style.fontSize = 'inherit';
-        fill.style.display = 'flex';
-        fill.style.alignItems = 'center';
-        fill.style.justifyContent = 'center';
-        fill.innerHTML = this.value;
-        return fill;
-    }
-}
-customElements.define('alt-bits-carrouselparticipant', BitsCarrouselParticipant);
+const BitsCarrouselTemplate = document.createElement('template');
+BitsCarrouselTemplate.innerHTML = `
+    <style>
+        :host{
+            display: inline-flex;
+            align-items: center;
+            column-gap: 4px;
+        }
+        :host>*:hover{
+            transform: scale(1.04)
+        }
+    </style>
+`;
 
 class BitsCarrousel extends HTMLElement{
-    /**@type {Object<String, HTMLElement>} */
     participants = {};
     static get observedAttributes(){
-        return ['max-size', 'min-size', 'max-score'];
+        return ['max-size', 'min-size', 'max-value'];
     }
-    get maxSize(){
-        return this.getAttribute('max-size');
+    get maxValue(){
+        if(!this.isConnected) return 1;
+        let number = Number.parseFloat(this.getAttribute('max-value'));
+        if(Number.isNaN(number) || number <=0){
+            console.error("Invalid max-value");
+            return 1
+        }
+        return number;
     }
     get minSize(){
+        if(!this.isConnected) return 1;
+        let number = Number.parseFloat(this.getAttribute('min-size'));
+        if(Number.isNaN(number)){
+            console.error("Invalid min-size");
+            return '10px'
+        }
         return this.getAttribute('min-size');
     }
-    get maxScore(){
-        let maxScore = this.getAttribute('max-score');
-        return maxScore == 'null' || maxScore == null ? 1 : maxScore;
+    get maxSize(){
+        if(!this.isConnected) return 1;
+        let number = Number.parseFloat(this.getAttribute('max-size'));
+        if(Number.isNaN(number) || number<=0){
+            console.error("Invalid max-size");
+            return '10px'
+        }
+        return this.getAttribute('max-size');
     }
     constructor(){
         super();
-        this.attachShadow({mode: 'open'});
+        this.attachShadow({mode: 'open'})
     }
     connectedCallback(){
         this.render();
     }
     attributeChangedCallback(name, oldValue, newValue){
-        if(newValue == 'null' || newValue == null) return;
-        if(name == 'max-size' || name == 'min-size' || name == 'max-score'){
-            Object.values(this.participants).forEach(participant=>participant.setAttribute(name, newValue));
-        }
+        Object.values(this.participants).forEach(item=>{
+            item.setAttribute(name, newValue);
+        })
     }
     render(){
         this.shadowRoot.innerHTML = '';
-        let container = document.createElement('div');
-        Object.assign(container.style, {
-            display: 'flex',
-            alignItems: 'center'
-        })
-        Object.values(this.participants).forEach(participant=>{
-            container.append(participant);
-        })
-        this.shadowRoot.append(container);
+        this.shadowRoot.append(BitsCarrouselTemplate.content.cloneNode(true));
+        this.shadowRoot.append(...Object.values(this.participants));
     }
-    addParticipant({name, id, score, data}){
-        if(score > this.maxScore) this.setAttribute('max-score', score);
-        let circle = document.createElement('alt-bits-carrouselparticipant');
-        circle.setAttribute('max-size', this.maxSize);
-        circle.setAttribute('min-size', this.minSize);
-        circle.setAttribute('max-value', this.maxScore);
-        circle.setAttribute('min-value', '0');
+    addParticipant({ name, id, score, participations, data }){
+        if(score > this.maxValue) this.setAttribute('max-value', score);
+        let circle = document.createElement('alt-bits-circle');
+        circle.setAttribute('tabindex', 0);
         circle.setAttribute('value', score);
-        circle.setAttribute('participant-name', name);
+        circle.setAttribute('badge', name);
+        circle.setAttribute('min-size', this.minSize);
+        circle.setAttribute('max-size', this.maxSize);
+        circle.setAttribute('max-value', this.maxValue);
+        
         this.participants[id] = circle;
         this.render();
-    }
-    highlightParticipant(id){
-        /**@type {HTMLElement} */
-        let participant = this.participants[id];
-        participant.scrollIntoView({block: 'center', inline: 'center'})
+
+        return circle;
     }
 }
-
 customElements.define('alt-bits-carrousel', BitsCarrousel);

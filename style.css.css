@@ -1,0 +1,42 @@
+:root{
+
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+nav,
+section,
+footer{
+    padding: 8px 16px;
+}
+section>*, 
+footer>*{
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+section>h1{
+    font-weight: 900;
+    font-size: 2.3rem;
+}
+footer{
+    text-align: center;
+}
+#carrousel-section{
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: red;
+    padding: 16px;
+}
+#carrousel-section>*{
+    max-width: 100%;
+}
+
+#activities-section>alt-bits-participation:hover{
+    border-radius: 8px;
+    background: whitesmoke;
+}

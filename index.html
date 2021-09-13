@@ -8,52 +8,90 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Bits by Ctrl Alt Tec</h1>
-    </header>
-    <section id="carrousel">
-        <alt-bits-carrousel id="bits-carrousel" max-size="60vmin" min-size="10vmin">
-        </alt-bits-carrousel>
+    <nav>
+        <h1>Bits by ctrl alt tec</h1>
+    </nav>
+    <section id="carrousel-section">
+        <alt-bits-carrousel
+            max-size="50vmin"
+            min-size="8vmin"
+            max-value="1"
+        ></alt-bits-carrousel>
     </section>
-    <section id="participations">
-        <h1>Hola!</h1>
-        <alt-bits-participation
-            participation-date="26/12/2021"
-            participation-category="Redes Sociales"
-            participation-description="Siguenos en redes sociales"
-            participation-score="3"
-        ></alt-bits-participation>
-        <alt-bits-participation
-            participation-date="26/12/2021"
-            participation-category="Redes Sociales"
-            participation-description="Siguenos en redes sociales"
-            participation-score="3"
-        ></alt-bits-participation>
-        <alt-bits-participation
-            participation-date="26/12/2021"
-            participation-category="Redes Sociales"
-            participation-description="Siguenos en redes sociales"
-            participation-score="3"
-        ></alt-bits-participation>
-        <alt-bits-participation
-            participation-date="26/12/2021"
-            participation-category="Redes Sociales"
-            participation-description="Siguenos en redes sociales"
-            participation-score="3"
-        ></alt-bits-participation>
+    <section id="activities-section">
+        <h1>Actividades</h1>
+        <alt-bits-participation participation-date="26/12/2021" participation-category="Redes sociales" participation-description="Seguir nuestras cuentas" participation-score="3"></alt-bits-participation>
+        <alt-bits-participation participation-date="26/12/2021" participation-category="Redes sociales" participation-description="Seguir nuestras cuentas" participation-score="3"></alt-bits-participation>
+        <alt-bits-participation participation-date="26/12/2021" participation-category="Redes sociales" participation-description="Seguir nuestras cuentas" participation-score="3"></alt-bits-participation>
+        <alt-bits-participation participation-date="26/12/2021" participation-category="Redes sociales" participation-description="Seguir nuestras cuentas" participation-score="3"></alt-bits-participation>
+        <alt-bits-participation participation-date="26/12/2021" participation-category="Redes sociales" participation-description="Seguir nuestras cuentas" participation-score="3"></alt-bits-participation>
+        <alt-bits-participation participation-date="26/12/2021" participation-category="Redes sociales" participation-description="Seguir nuestras cuentas" participation-score="3"></alt-bits-participation>
     </section>
-    <section id="about">
-        <h1>
-            Acerca de
-        </h1>
+
+    <section id="prizes-section">
+        <h1>Premios</h1>
         <p>
-            Esta página se encuentra en desarrollo. Pronto podrás ver todas nuestras actividades, miembros activos y demás! <br>
-            Igualmente, el codigo detrás de esta página será compartido con otros grupos estudiantiles como Quanta y WePlay. 
+            ¡Esperalos muy pronto!
         </p>
     </section>
-    <script src="./components/alt-dynamic-circle.js"></script>
+    <section id="about-section">
+        <h1>Acerca de</h1>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magnam nobis quia eum eius sint molestiae veniam iusto non maxime perferendis illo nisi vero earum eligendi dolor voluptates voluptate, sequi illum.</p>
+    </section>
+    <footer>
+        <p>Made with ❤️ by <a href="https://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a></p>
+    </footer>
+
+    <ui-modal>
+        <alt-bits-participant-details
+            participant-name="Juan Carlos"
+            participant-id="A01652138"
+            participant-score="31"
+        ></alt-bits-participant-details>
+    </ui-modal>
+
+    <script src="./components/alt-bits-circle.js"></script>
     <script src="./components/alt-bits-carrousel.js"></script>
+    <script src="./components/alt-bits-participant.js"></script>
     <script src="./components/alt-bits-participation.js"></script>
-    <script src="./alt-bits.js"></script>
+    <script src="./components/alt-bits-participant-detail.js"></script>
+    <script src="./components/ui-modal.js"></script>
+    <script>
+
+        async function load(){
+            let raw = await fetch('http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec');
+            let json = await raw.json();
+            let members = Object.values(json.members).sort((a, b)=>(b?._participations?.total || 0) - (a?._participations.total || 0));
+            members.forEach(member=>{
+                let memberCircle = document.querySelector('alt-bits-carrousel').addParticipant({
+                    name: `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}` || 'Unasigned',
+                    id: member['Matrícula'],
+                    score: member?._participations?.total || 1
+                });
+                let memberDetail = document.createElement('alt-bits-participant-details');
+                memberDetail.setAttribute('participant-name', `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}` || 'Unasigned');
+                memberDetail.setAttribute('participant-id', member['Matrícula'])
+                memberDetail.setAttribute('participant-score', member?._participations?.total || 1);
+
+                
+                memberCircle.addEventListener('click', ()=>{
+                    let modal = document.createElement('ui-modal');
+                    modal.append(memberDetail);
+                    document.body.append(modal);
+                })
+                
+                 member?._participations?.participations.forEach(participation=>{
+                     memberDetail.addParticipation({
+                         date: participation['Fecha'], 
+                         category: participation['Categoría'], 
+                         description: participation['Descripción'], 
+                         score: participation['Bits']
+                     })
+                 })
+            })
+        }
+        load();
+
+    </script>
 </body>
 </html>

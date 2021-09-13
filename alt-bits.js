@@ -1,21 +1,41 @@
+import './components/alt-bits-circle.js'
+import './components/alt-bits-carrousel.js'
+import './components/alt-bits-participant.js'
+import './components/alt-bits-participant-detail.js'
+import './components/alt-bits-participation.js'
+import './components/ui-modal.js'
+import SETTINGS from './settings.js'
+
+if(SETTINGS == undefined) throw "Missing configuration settings";
+
 async function load(){
-    // let raw = await fetch('http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec');
-    let raw = await fetch('test.json')
+    let raw = await fetch(SETTINGS.baseURL);
     let json = await raw.json();
     let members = Object.values(json.members).sort((a, b)=>(b?._participations?.total || 0) - (a?._participations.total || 0));
-
-    let participations = {};
-
     members.forEach(member=>{
-        document.querySelector('#bits-carrousel').addParticipant({
-            name: `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}` || 'Unasigned',
-            id: member['Matrícula'],
-            score: member?._participations?.total || 1
+        let memberCircle = document.querySelector('alt-bits-carrousel').addParticipant({
+            name: SETTINGS.columnNames.member.name(member),
+            id: SETTINGS.columnNames.member.id(member),
+            score: SETTINGS.columnNames.member.score(member)
+        });
+        let memberDetail = document.createElement('alt-bits-participant-details');
+        memberDetail.setAttribute('participant-name', SETTINGS.columnNames.member.name(member));
+        memberDetail.setAttribute('participant-id', SETTINGS.columnNames.member.id(member))
+        memberDetail.setAttribute('participant-score', SETTINGS.columnNames.member.score(member));
+
+        SETTINGS.columnNames.member.participations(member).forEach(participation=>{
+            memberDetail.addParticipation({
+                date: SETTINGS.columnNames.participation.date(participation), 
+                category: SETTINGS.columnNames.participation.category(participation), 
+                description: SETTINGS.columnNames.participation.description(participation), 
+                score: SETTINGS.columnNames.participation.score(participation)
+            })
+        })
+        memberCircle.addEventListener('click', ()=>{
+            let modal = document.createElement('ui-modal');
+            modal.append(memberDetail);
+            document.body.append(modal);
         })
     })
-
-
-
 }
-
-load()
+load();

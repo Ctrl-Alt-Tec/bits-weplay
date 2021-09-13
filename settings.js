@@ -1,4 +1,4 @@
-const SETTINGS = {
+export default {
     columnNames: {
         member: {
             name: member => `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}` || 'Unasigned',
@@ -12,5 +12,6 @@ const SETTINGS = {
             description: participation => participation['Descripción'], 
             score: participation => participation['Bits']
         }
-    }
+    },
+    baseURL: 'http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec'
 }

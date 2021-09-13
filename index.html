@@ -9,7 +9,10 @@
 </head>
 <body>
     <nav>
-        <h1>Bits by ctrl alt tec</h1>
+        <img src="https://ctrl-alt-tec.hackclub.com/img/logo-block.png" alt="Ctrl Alt Tec" srcset="">
+        <h1>
+            Bits
+        </h1>
     </nav>
     <section id="carrousel-section">
         <alt-bits-carrousel
@@ -42,52 +45,6 @@
         <p>Made with ❤️ by <a href="https://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a></p>
     </footer>
 
-
-    <script src="./components/alt-bits-circle.js"></script>
-    <script src="./components/alt-bits-carrousel.js"></script>
-    <script src="./components/alt-bits-participant.js"></script>
-    <script src="./components/alt-bits-participation.js"></script>
-    <script src="./components/alt-bits-participant-detail.js"></script>
-    <script src="./components/ui-modal.js"></script>
-    <script src="./settings.js"></script>
-    <script>
-
-        if(SETTINGS == undefined) throw "Missing configuration settings";
-
-        async function load(){
-            let raw = await fetch('http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec');
-            let json = await raw.json();
-            let members = Object.values(json.members).sort((a, b)=>(b?._participations?.total || 0) - (a?._participations.total || 0));
-            members.forEach(member=>{
-                let memberCircle = document.querySelector('alt-bits-carrousel').addParticipant({
-                    name: SETTINGS.columnNames.member.name(member),
-                    id: SETTINGS.columnNames.member.id(member),
-                    score: SETTINGS.columnNames.member.score(member)
-                });
-                let memberDetail = document.createElement('alt-bits-participant-details');
-                memberDetail.setAttribute('participant-name', SETTINGS.columnNames.member.name(member));
-                memberDetail.setAttribute('participant-id', SETTINGS.columnNames.member.id(member))
-                memberDetail.setAttribute('participant-score', SETTINGS.columnNames.member.score(member));
-
-                SETTINGS.columnNames.member.participations(member).forEach(participation=>{
-                    memberDetail.addParticipation({
-                        date: SETTINGS.columnNames.participation.date(participation), 
-                        category: SETTINGS.columnNames.participation.category(participation), 
-                        description: SETTINGS.columnNames.participation.description(participation), 
-                        score: SETTINGS.columnNames.participation.score(participation)
-                    })
-                })
-                
-                memberCircle.addEventListener('click', ()=>{
-                    let modal = document.createElement('ui-modal');
-                    modal.append(memberDetail);
-                    document.body.append(modal);
-                })
-                
-            })
-        }
-        load();
-
-    </script>
+    <script src="./alt-bits.js" type="module"></script>
 </body>
 </html>

@@ -6,6 +6,22 @@ body{
     margin: 0;
     padding: 0;
 }
+
+nav{
+    background: #dde1e4;
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+    position: sticky;
+    top: 0;
+}
+nav img{
+    height: 2em;
+    margin-right: 0.5ch;
+    display: inline-block;
+    float: left;
+}
+
 nav,
 section,
 footer{
@@ -29,7 +45,7 @@ footer{
 #carrousel-section{
     overflow-x: auto;
     overflow-y: hidden;
-    background: red;
+    background: #dde1e4;
     padding: 16px;
 }
 #carrousel-section>*{

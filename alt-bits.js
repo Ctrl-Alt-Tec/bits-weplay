@@ -32,6 +32,7 @@ async function load(){
             })
         })
         memberCircle.addEventListener('click', ()=>{
+            memberCircle.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
             let modal = document.createElement('ui-modal');
             modal.append(memberDetail);
             document.body.append(modal);

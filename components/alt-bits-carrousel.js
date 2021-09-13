@@ -76,5 +76,12 @@ class BitsCarrousel extends HTMLElement{
 
         return circle;
     }
+    highlightParticipant(id){
+        /**@type {HTMLElement} */
+        let participant = this.participants[id];
+        if(participant == undefined) return;
+        participant.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
+        participant.click();
+    }
 }
 customElements.define('alt-bits-carrousel', BitsCarrousel);

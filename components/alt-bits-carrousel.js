@@ -83,7 +83,7 @@ class BitsCarrousel extends HTMLElement{
         participant.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
         participant.click();
     }
-    selectRandom(){
+    selectRandomWeighted(){
         // Store here all the id's
         let names = [];
         // For each participant
@@ -94,25 +94,38 @@ class BitsCarrousel extends HTMLElement{
             }
         });
         // Randomnize array
-        let names_random = randomnizeArray(names);
+        let names_random = BitsCarrouselRandoms.randomnizeArray(names);
         // Get random index
-        let index = Math.randomFrom1(names_random.length);
+        let index = BitsCarrouselRandoms.randomFrom1(names_random.length);
+        let winnerID = names_random[index];
+        this.highlightParticipant(winnerID);
+        return winnerID;
+    }
+    selectRandomUnweighted(){
+        // Store here all the id's
+        let names = Object.keys(this.participants);
+        // Randomnize array
+        let names_random = BitsCarrouselRandoms.randomnizeArray(names);
+        // Get random index
+        let index = BitsCarrouselRandoms.randomFrom1(names_random.length);
         let winnerID = names_random[index];
         this.highlightParticipant(winnerID);
         return winnerID;
     }
 }
 
-const randomnizeArray = array => {
-    for(let i = array.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i+1));
-        const temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
+const BitsCarrouselRandoms = {
+    randomnizeArray = array => {
+        for(let i = array.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i+1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }, 
+    randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
 }
 
-Math.randomFrom1 = (max) => Math.floor( Math.random() * (max) ) + 1
 
 customElements.define('alt-bits-carrousel', BitsCarrousel);

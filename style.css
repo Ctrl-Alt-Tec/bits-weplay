@@ -14,6 +14,7 @@ nav{
     font-size: 1.5em;
     position: sticky;
     top: 0;
+    padding: 16px;
 }
 nav img{
     height: 2em;
@@ -21,8 +22,10 @@ nav img{
     display: inline-block;
     float: left;
 }
+nav h1{
+    margin: 0;
+}
 
-nav,
 section,
 footer{
     padding: 8px 16px;

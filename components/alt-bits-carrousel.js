@@ -4,7 +4,7 @@ BitsCarrouselTemplate.innerHTML = `
         :host{
             display: inline-flex;
             align-items: center;
-            column-gap: 4px;
+            column-gap: 1em;
         }
         :host>*:hover{
             transform: scale(1.04)

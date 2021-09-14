@@ -13,5 +13,5 @@ export default {
             score: participation => participation['PUNTUACIÓN']
         }
     },
-    baseURL: 'http://ctrl-api.hackclub.com/api/participation?org=weplay'
+    baseURL: 'https://ctrl-alt-tec-api.herokuapp.com/api/participation?org=weplay'
 }

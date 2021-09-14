@@ -8,7 +8,7 @@ BitsCircleTemplate.innerHTML = `
             align-items: center;
         }
         :host .circle{
-            background: black;
+            background: red;
             color: white;
             border-radius: 100%;
             display: flex;

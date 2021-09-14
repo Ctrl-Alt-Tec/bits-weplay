@@ -3,7 +3,7 @@ BitsParticipantDetailTemplate.innerHTML = `
     <style>
         :host{
             padding: 16px;
-            background: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.9);
             display: block; 
             position: relative;
         }

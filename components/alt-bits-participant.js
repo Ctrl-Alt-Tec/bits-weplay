@@ -81,7 +81,7 @@ class BitsParticipant extends HTMLElement{
     render(){
         this.shadowRoot.innerHTML = '';
         this.shadowRoot.append(BitsParticipantTemplate.content.cloneNode(true));
-        this.shadowRoot.querySelector('img').setAttribute('src', `http://ctrl-api.hackclub.com/utils/identicon/${this.id}`)
+        this.shadowRoot.querySelector('img').setAttribute('src', `http://ctrl-alt-tec-api.herokuapp.com/utils/identicon/${this.id}`)
         this.shadowRoot.querySelector('.participant-name').innerHTML = this.name;
         this.shadowRoot.querySelector('.participant-id').innerHTML = this.id;
         this.shadowRoot.querySelector('.participant-score').innerHTML = this.score;

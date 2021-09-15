@@ -34,8 +34,8 @@ BitsParticipantTemplate.innerHTML = `
             height: 32px;
             width: 32px;
             border-radius: 16px;
-            background: black;
-            color: white;
+            background: var(--bits-participant_score-background);
+            color: var(--bits-participant_score-color);
             font-size: 0.8rem;
             line-height: 32px;
             text-align: center;

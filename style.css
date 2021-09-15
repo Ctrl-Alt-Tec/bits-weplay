@@ -1,4 +1,29 @@
 :root{
+    --bits-carrousel_circle-hover-transform: scale(1.05);
+    --bits-carrousel_column-gap: 1em;
+
+    --bits-circle_background: black;
+    --bits-circle_color: white;
+    --bits-circle_badge-width: 200px;
+    --bits-circle_badge-weight: 600;
+    --bits-circle_badge-font-size: 1.1rem;
+
+    --bits-participation-detail_background: rgba(255,255,255,0.8);
+    --bits-participation-detail_participation-background-hover: whitesmoke;
+
+    --bits-participant_score-background: black;
+    --bits-participant_score-color: white;
+
+    --bits-participation_badge-background: grey;
+    --bits-participation_badge-color: white;
+
+    --bits-participation_score-background: black;
+    --bits-participation_score-color: white;
+
+    --ui-modal_background: rgba(240,240,240,0.6);
+    --ui-modal_backdrop-filter: blur(16px);
+    --ui-modal_max-width: 600px;
+    --ui-modal_max-height: 90vh;
 
 }
 body{

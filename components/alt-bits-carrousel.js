@@ -4,10 +4,10 @@ BitsCarrouselTemplate.innerHTML = `
         :host{
             display: inline-flex;
             align-items: center;
-            column-gap: 1em;
+            column-gap: var(--bits-carrousel_column-gap);
         }
         :host>*:hover{
-            transform: scale(1.04)
+            transform: var(--bits-carrousel_circle-hover-transform);
         }
     </style>
 `;

@@ -4,8 +4,8 @@ ModalWindowTemplate.innerHTML = `
         :host>div{
             position: fixed;
             top: 0; bottom: 0; left: 0; right: 0;
-            background-color: rgba(240,240,240,0.6);
-            backdrop-filter: blur(16px);
+            background-color: var(--ui-modal_background);
+            backdrop-filter: var(--ui-modal_backdrop-filter);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -13,9 +13,9 @@ ModalWindowTemplate.innerHTML = `
         }
         :host modal{
             margin-top: 8px;
-            max-width: 600px;
+            max-width: var(--ui-modal_max-width);
             width: 100%;
-            max-height: 90vh;
+            max-height: var(--ui-modal_max-height);
             overflow: auto        
         }
     </style>

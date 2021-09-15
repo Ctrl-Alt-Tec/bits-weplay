@@ -22,10 +22,10 @@ BitsParticipationTemplate.innerHTML = `
         :host .participation-category{
             font-size: 1rem; 
             font-weight: 600;
-            background-color: grey;
+            background-color: var(--bits-participation_badge-background);
             padding: 2px 8px;
             border-radius: 16px;
-            color: white;
+            color: var(--bits-participation_badge-color);
             margin-left: -2px
         }
         :host .participation-date{
@@ -40,8 +40,8 @@ BitsParticipationTemplate.innerHTML = `
             height: 32px;
             width: 32px;
             border-radius: 16px;
-            background-color: black;
-            color: white;
+            background-color: var(--bits-participation_score-background);
+            color: var(--bits-participation_score-color);
             line-height: 32px;
             text-align: center;
         }

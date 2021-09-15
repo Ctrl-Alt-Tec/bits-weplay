@@ -4,11 +4,11 @@ import './components/alt-bits-participant.js'
 import './components/alt-bits-participant-detail.js'
 import './components/alt-bits-participation.js'
 import './components/ui-modal.js'
-import SETTINGS from './settings.js'
+// import SETTINGS from './settings.js'
 
-if(SETTINGS == undefined) throw "Missing configuration settings";
+// if(SETTINGS == undefined) throw "Missing configuration settings";
 
-async function load(){
+async function AltBits(SETTINGS){
     let raw = await fetch(SETTINGS.baseURL);
     let json = await raw.json();
     let members = Object.values(json.members).sort((a, b)=>(b?._participations?.total || 0) - (a?._participations.total || 0));
@@ -40,4 +40,7 @@ async function load(){
         })
     })
 }
-load();
+
+window.AltBits = AltBits;
+export default AltBits;
+// load();

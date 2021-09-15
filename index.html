@@ -46,6 +46,26 @@
         <p>Made with ❤️ by <a href="https://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a></p>
     </footer>
 
-    <script src="./alt-bits.js" type="module"></script>
+    <!-- <script src="./alt-bits.js" type="module"></script> -->
+    <script type="module">
+        import AltBits from './alt-bits.js'
+        AltBits({
+            columnNames: {
+                member: {
+                    name: member => `${member['Nombre(s)']} ${member['Apellido Paterno']} ${member['Apellido Materno']}` || 'Unasigned',
+                    id: member => member['Matrícula'],
+                    score: member =>  member?._participations?.total || 1,
+                    participations: member => member?._participations?.participations
+                },
+                participation: {
+                    date: participation => participation['Fecha'], 
+                    category: participation => participation['Categoría'], 
+                    description: participation => participation['Descripción'], 
+                    score: participation => participation['Bits']
+                }
+            },
+            baseURL: 'http://ctrl-api.hackclub.com/api/participation?org=ctrl-alt-tec'
+        })
+    </script>
 </body>
 </html>

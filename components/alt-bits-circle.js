@@ -76,8 +76,8 @@ class BitsCircle extends HTMLElement{
     }
     get units(){
         if(!this.isConnected) return 'px';
-        let maxSizeUnits = this.getAttribute('max-size')?.match(/(?<=\d+\s*)([a-zA-Z]+|%)/)?.[0]?.toLowerCase();
-        let minSizeUnits = this.getAttribute('min-size')?.match(/(?<=\d+\s*)([a-zA-Z]+|%)/)?.[0]?.toLowerCase();
+        let maxSizeUnits = this.getAttribute('max-size')?.split(/\d+/g)[1]?.toLowerCase();
+        let minSizeUnits = this.getAttribute('min-size')?.split(/\d+/g)[1]?.toLowerCase();
         if(maxSizeUnits != minSizeUnits){
             console.error("Units must be equal. Will use px");
             return 'px';

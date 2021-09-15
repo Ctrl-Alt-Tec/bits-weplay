@@ -26,7 +26,6 @@ BitsParticipantDetailTemplate.innerHTML = `
 `;
 
 class BitsParticipantDetail extends HTMLElement{
-    participations = [];
     static get observedAttributes(){
         return ['participant-name', 'participant-id', 'participant-score'];
     }
@@ -42,6 +41,7 @@ class BitsParticipantDetail extends HTMLElement{
     constructor(){
         super();
         this.attachShadow({mode: 'open'});
+        this.participations = [];
     }
     connectedCallback(){
         this.render();

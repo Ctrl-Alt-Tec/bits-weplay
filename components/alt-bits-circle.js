@@ -8,18 +8,18 @@ BitsCircleTemplate.innerHTML = `
             align-items: center;
         }
         :host .circle{
-            background: red;
-            color: white;
+            background: var(--bits-circle_background);
+            color: var(--bits-circle_color);
             border-radius: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         :host .badge{
-            width: 200px;
+            width: var(--bits-circle_badge-width);
             padding: 4px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: var(--bits-circle_badge-weight);
+            font-size: var(--bits-circle_badge-font-size);
             text-align: center;
         }
         :host .badge:empty{
@@ -76,8 +76,8 @@ class BitsCircle extends HTMLElement{
     }
     get units(){
         if(!this.isConnected) return 'px';
-        let maxSizeUnits = this.getAttribute('max-size')?.match(/(?<=\d+\s*)([a-zA-Z]+|%)/)?.[0]?.toLowerCase();
-        let minSizeUnits = this.getAttribute('min-size')?.match(/(?<=\d+\s*)([a-zA-Z]+|%)/)?.[0]?.toLowerCase();
+        let maxSizeUnits = this.getAttribute('max-size')?.split(/\d+/g)[1]?.toLowerCase();
+        let minSizeUnits = this.getAttribute('min-size')?.split(/\d+/g)[1]?.toLowerCase();
         if(maxSizeUnits != minSizeUnits){
             console.error("Units must be equal. Will use px");
             return 'px';

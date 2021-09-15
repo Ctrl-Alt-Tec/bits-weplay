@@ -47,6 +47,26 @@
         <p>Made with ❤️ by <a href="https://ctrl-alt-tec.hackclub.com">Ctrl Alt Tec</a></p>
     </footer>
 
-    <script src="./alt-bits.js" type="module"></script>
+    <!-- <script src="./alt-bits.js" type="module"></script> -->
+    <script type="module">
+        import AltBits from './alt-bits.js'
+        AltBits({
+            columnNames: {
+                member: {
+                    name: member => member['NOMBRE DEL INTEGRANTE'] || 'Unasigned',
+                    id: member => member['MATRÍCULA'],
+                    score: member =>  member?._participations?.total || 1,
+                    participations: member => member?._participations?.participations
+                },
+                participation: {
+                    date: participation => participation['FECHA'], 
+                    category: description => 'Puntos por participación', 
+                    description: participation => participation['CONCEPTO'], 
+                    score: participation => participation['PUNTUACIÓN']
+                }
+            },
+            baseURL: 'https://ctrl-alt-tec-api.herokuapp.com/api/participation?org=weplay'
+        })
+    </script>
 </body>
 </html>

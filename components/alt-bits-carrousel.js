@@ -4,16 +4,15 @@ BitsCarrouselTemplate.innerHTML = `
         :host{
             display: inline-flex;
             align-items: center;
-            column-gap: 1em;
+            column-gap: var(--bits-carrousel_column-gap);
         }
         :host>*:hover{
-            transform: scale(1.04)
+            transform: var(--bits-carrousel_circle-hover-transform);
         }
     </style>
 `;
 
 class BitsCarrousel extends HTMLElement{
-    participants = {};
     static get observedAttributes(){
         return ['max-size', 'min-size', 'max-value'];
     }
@@ -46,7 +45,8 @@ class BitsCarrousel extends HTMLElement{
     }
     constructor(){
         super();
-        this.attachShadow({mode: 'open'})
+        this.attachShadow({mode: 'open'});
+        this.participants = {};
     }
     connectedCallback(){
         this.render();
@@ -115,7 +115,7 @@ class BitsCarrousel extends HTMLElement{
 }
 
 const BitsCarrouselRandoms = {
-    randomnizeArray: array => {
+    randomnizeArray: (array) => {
         for(let i = array.length - 1; i > 0; i--){
             const j = Math.floor(Math.random() * (i+1));
             const temp = array[i];

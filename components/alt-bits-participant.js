@@ -34,8 +34,8 @@ BitsParticipantTemplate.innerHTML = `
             height: 32px;
             width: 32px;
             border-radius: 16px;
-            background: black;
-            color: white;
+            background: var(--bits-participant_score-background);
+            color: var(--bits-participant_score-color);
             font-size: 0.8rem;
             line-height: 32px;
             text-align: center;
@@ -81,7 +81,7 @@ class BitsParticipant extends HTMLElement{
     render(){
         this.shadowRoot.innerHTML = '';
         this.shadowRoot.append(BitsParticipantTemplate.content.cloneNode(true));
-        this.shadowRoot.querySelector('img').setAttribute('src', `http://ctrl-alt-tec-api.herokuapp.com/utils/identicon/${this.id}`)
+        this.shadowRoot.querySelector('img').setAttribute('src', `http://ctrl-api.hackclub.com/utils/identicon/${this.id}`)
         this.shadowRoot.querySelector('.participant-name').innerHTML = this.name;
         this.shadowRoot.querySelector('.participant-id').innerHTML = this.id;
         this.shadowRoot.querySelector('.participant-score').innerHTML = this.score;

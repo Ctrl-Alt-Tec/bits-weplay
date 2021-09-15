@@ -3,13 +3,13 @@ BitsParticipantDetailTemplate.innerHTML = `
     <style>
         :host{
             padding: 16px;
-            background: rgba(0,0,0,0.9);
+            background: var(--bits-participation-detail_background);
             display: block; 
             position: relative;
         }
         :host alt-bits-participation:hover{
             border-radius: 8px;
-            background: whitesmoke;
+            background: var(--bits-participation-detail_participation-background-hover);
         }
     </style>
     <header>
@@ -26,7 +26,6 @@ BitsParticipantDetailTemplate.innerHTML = `
 `;
 
 class BitsParticipantDetail extends HTMLElement{
-    participations = [];
     static get observedAttributes(){
         return ['participant-name', 'participant-id', 'participant-score'];
     }
@@ -42,6 +41,7 @@ class BitsParticipantDetail extends HTMLElement{
     constructor(){
         super();
         this.attachShadow({mode: 'open'});
+        this.participations = [];
     }
     connectedCallback(){
         this.render();

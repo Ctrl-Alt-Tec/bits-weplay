@@ -4,15 +4,16 @@ import './components/alt-bits-participant.js'
 import './components/alt-bits-participant-detail.js'
 import './components/alt-bits-participation.js'
 import './components/ui-modal.js'
-import SETTINGS from './settings.js'
+// import SETTINGS from './settings.js'
 
-if(SETTINGS == undefined) throw "Missing configuration settings";
+// if(SETTINGS == undefined) throw "Missing configuration settings";
 
-async function load(){
+async function AltBits(SETTINGS){
     let raw = await fetch(SETTINGS.baseURL);
     let json = await raw.json();
     let members = Object.values(json.members).sort((a, b)=>(b?._participations?.total || 0) - (a?._participations.total || 0));
     members.forEach(member=>{
+        console.log(member)
         let memberCircle = document.querySelector('alt-bits-carrousel').addParticipant({
             name: SETTINGS.columnNames.member.name(member),
             id: SETTINGS.columnNames.member.id(member),
@@ -23,7 +24,7 @@ async function load(){
         memberDetail.setAttribute('participant-id', SETTINGS.columnNames.member.id(member))
         memberDetail.setAttribute('participant-score', SETTINGS.columnNames.member.score(member));
 
-        SETTINGS.columnNames.member.participations(member).forEach(participation=>{
+        SETTINGS.columnNames.member.participations(member)?.forEach(participation=>{
             memberDetail.addParticipation({
                 date: SETTINGS.columnNames.participation.date(participation), 
                 category: SETTINGS.columnNames.participation.category(participation), 
@@ -39,4 +40,6 @@ async function load(){
         })
     })
 }
-load();
+
+export default AltBits;
+// load();

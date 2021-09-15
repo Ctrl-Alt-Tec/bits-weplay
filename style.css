@@ -20,7 +20,7 @@
     --bits-participation_score-background: white;
     --bits-participation_score-color: black;
 
-    --ui-modal_background: rgba(240,240,240,0.6);
+    --ui-modal_background: rgba(240,240,240,0.9);
     --ui-modal_backdrop-filter: blur(16px);
     --ui-modal_max-width: 600px;
     --ui-modal_max-height: 90vh;

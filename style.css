@@ -2,23 +2,23 @@
     --bits-carrousel_circle-hover-transform: scale(1.05);
     --bits-carrousel_column-gap: 1em;
 
-    --bits-circle_background: black;
+    --bits-circle_background: red;
     --bits-circle_color: white;
     --bits-circle_badge-width: 200px;
     --bits-circle_badge-weight: 600;
     --bits-circle_badge-font-size: 1.1rem;
 
-    --bits-participation-detail_background: rgba(255,255,255,0.8);
-    --bits-participation-detail_participation-background-hover: whitesmoke;
+    --bits-participation-detail_background: rgba(0,0,0,0.8);
+    --bits-participation-detail_participation-background-hover: #303030;
 
-    --bits-participant_score-background: black;
-    --bits-participant_score-color: white;
+    --bits-participant_score-background: white;
+    --bits-participant_score-color: black;
 
     --bits-participation_badge-background: grey;
     --bits-participation_badge-color: white;
 
-    --bits-participation_score-background: black;
-    --bits-participation_score-color: white;
+    --bits-participation_score-background: white;
+    --bits-participation_score-color: black;
 
     --ui-modal_background: rgba(240,240,240,0.6);
     --ui-modal_backdrop-filter: blur(16px);
@@ -30,7 +30,7 @@ body{
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
-    background: #303030;
+    background: #181818;
     color: white;
 }
 
@@ -84,5 +84,5 @@ footer{
 
 #activities-section>alt-bits-participation:hover{
     border-radius: 8px;
-    background: whitesmoke;
+    background: #303030;
 }
